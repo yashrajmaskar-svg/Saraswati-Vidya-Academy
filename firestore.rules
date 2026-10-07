@@ -1,0 +1,143 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isUser(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isPrincipalEmail() {
+      return isSignedIn() && request.auth.token.email != null && (
+        request.auth.token.email == 'maskaryashraj@gmail.com' ||
+        request.auth.token.email == 'yashrajmaskar@gmail.com' ||
+        request.auth.token.email.matches('(?i)maskaryashraj@gmail\\.com') ||
+        request.auth.token.email.matches('(?i)yashrajmaskar@gmail\\.com')
+      );
+    }
+
+    function isPrincipal() {
+      return isSignedIn() && (
+        isPrincipalEmail() ||
+        (exists(/databases/$(database)/documents/system/bootstrap) &&
+         get(/databases/$(database)/documents/system/bootstrap).data.principalUid == request.auth.uid) ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'principal')
+      );
+    }
+
+    function isActiveUser() {
+      return isSignedIn() && (
+        isPrincipal() ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.active == true)
+      );
+    }
+
+    // System bootstrap for secure one-time initial setup
+    match /system/{docId} {
+      allow get: if true;
+      allow list: if isSignedIn();
+      allow create: if isSignedIn() &&
+                    docId == 'bootstrap' &&
+                    (!exists(/databases/$(database)/documents/system/bootstrap) ||
+                     request.resource.data.principalUid == request.auth.uid);
+      allow update, delete: if isPrincipal();
+    }
+
+    // Users Collection
+    match /users/{userId} {
+      allow get: if isUser(userId) || isPrincipal();
+      allow list: if isPrincipal();
+      
+      allow create: if isSignedIn() && (
+        isPrincipal() ||
+        (isUser(userId) && (
+          request.resource.data.role == 'teacher' ||
+          (request.resource.data.role == 'principal' && (
+            isPrincipalEmail() ||
+            (exists(/databases/$(database)/documents/system/bootstrap) &&
+             get(/databases/$(database)/documents/system/bootstrap).data.principalUid == request.auth.uid)
+          ))
+        ))
+      );
+      
+      allow update: if isPrincipal() || (
+        isUser(userId) &&
+        request.resource.data.role == resource.data.role
+      );
+      
+      allow delete: if isPrincipal();
+    }
+
+    // Notices
+    match /notices/{noticeId} {
+      allow read: if isSignedIn();
+      allow write: if isPrincipal();
+    }
+
+    // Announcements
+    match /announcements/{announcementId} {
+      allow read: if isSignedIn();
+      allow write: if isPrincipal();
+    }
+
+    // Schedules
+    match /schedules/{scheduleId} {
+      allow read: if isSignedIn();
+      allow write: if isPrincipal();
+    }
+
+    // Meetings
+    match /meetings/{meetingId} {
+      allow read: if isSignedIn();
+      allow write: if isPrincipal();
+    }
+
+    // Competitions
+    match /competitions/{competitionId} {
+      allow read: if isSignedIn();
+      allow write: if isPrincipal();
+    }
+
+    // Timetable
+    match /timetable/{timetableId} {
+      allow read: if isSignedIn();
+      allow write: if isPrincipal();
+    }
+
+    // Circulars (Problem 3: Teachers read, Principal reads/creates/updates/deletes)
+    match /circulars/{circularId} {
+      allow read: if isSignedIn();
+      allow write: if isPrincipal();
+    }
+
+    // School Events (Problem 2: Teachers read, Principal reads/creates/updates/deletes)
+    match /events/{eventId} {
+      allow read: if isSignedIn();
+      allow write: if isPrincipal();
+    }
+
+    // Teachers Directory (Principal Only)
+    match /teachers/{teacherId} {
+      allow read, write: if isPrincipal();
+    }
+
+    // Email delivery audit logs
+    match /emailLogs/{logId} {
+      allow read: if isPrincipal();
+      allow create: if isSignedIn();
+      allow update, delete: if isPrincipal();
+    }
+
+    // School Settings (Public get for school identity, Principal manage)
+    match /schoolSettings/{settingsId} {
+      allow get: if true;
+      allow list: if isSignedIn();
+      allow create, update: if isSignedIn();
+      allow delete: if isPrincipal();
+    }
+  }
+}

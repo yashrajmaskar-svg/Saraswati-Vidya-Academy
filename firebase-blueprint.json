@@ -1,0 +1,216 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with role-based access for School Smart Hub.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 150 },
+        "role": { "type": "string", "enum": ["principal", "teacher"] },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["name", "email", "role", "active"]
+    },
+    "Notice": {
+      "title": "Notice",
+      "description": "Official notices posted by the Principal.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 5000 },
+        "date": { "type": "string", "maxLength": 50 },
+        "importance": { "type": "string", "enum": ["Important", "Normal"] },
+        "createdBy": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["title", "description", "date", "importance"]
+    },
+    "Announcement": {
+      "title": "Announcement",
+      "description": "Official school announcements with optional email broadcasting.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "message": { "type": "string", "maxLength": 5000 },
+        "date": { "type": "string", "maxLength": 50 },
+        "sendEmail": { "type": "boolean" },
+        "createdBy": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["title", "message", "date"]
+    },
+    "Schedule": {
+      "title": "Schedule",
+      "description": "School activity or term schedules.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "date": { "type": "string", "maxLength": 50 },
+        "time": { "type": "string", "maxLength": 50 },
+        "location": { "type": "string", "maxLength": 150 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "createdBy": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["title", "date", "time"]
+    },
+    "Meeting": {
+      "title": "Meeting",
+      "description": "Faculty and departmental meetings.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "date": { "type": "string", "maxLength": 50 },
+        "time": { "type": "string", "maxLength": 50 },
+        "venue": { "type": "string", "maxLength": 150 },
+        "agenda": { "type": "string", "maxLength": 3000 },
+        "createdBy": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["title", "date", "time", "venue", "agenda"]
+    },
+    "Competition": {
+      "title": "Competition",
+      "description": "Student and inter-house competitions.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "category": { "type": "string", "maxLength": 100 },
+        "date": { "type": "string", "maxLength": 50 },
+        "eligibility": { "type": "string", "maxLength": 150 },
+        "details": { "type": "string", "maxLength": 3000 },
+        "createdBy": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["title", "category", "date"]
+    },
+    "TimetableEntry": {
+      "title": "TimetableEntry",
+      "description": "Class schedule period item.",
+      "type": "object",
+      "properties": {
+        "day": { "type": "string", "enum": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] },
+        "period": { "type": "string", "maxLength": 50 },
+        "subject": { "type": "string", "maxLength": 100 },
+        "teacher": { "type": "string", "maxLength": 100 },
+        "startTime": { "type": "string", "maxLength": 20 },
+        "endTime": { "type": "string", "maxLength": 20 },
+        "room": { "type": "string", "maxLength": 50 },
+        "createdBy": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["day", "period", "subject", "teacher", "startTime", "endTime", "room"]
+    },
+    "Teacher": {
+      "title": "Teacher",
+      "description": "Registered faculty member record for email notices and directory.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 150 },
+        "active": { "type": "boolean" },
+        "phone": { "type": "string", "maxLength": 30 },
+        "subject": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["name", "email", "active"]
+    },
+    "Circular": {
+      "title": "Circular",
+      "description": "Administrative circulars and official communiqués.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "content": { "type": "string", "maxLength": 5000 },
+        "date": { "type": "string", "maxLength": 50 },
+        "createdBy": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["title", "content", "date"]
+    },
+    "SchoolEvent": {
+      "title": "SchoolEvent",
+      "description": "School events and calendar milestones.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 3000 },
+        "eventDate": { "type": "string", "maxLength": 50 },
+        "startTime": { "type": "string", "maxLength": 50 },
+        "endTime": { "type": "string", "maxLength": 50 },
+        "location": { "type": "string", "maxLength": 150 },
+        "createdBy": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["title", "description", "eventDate", "startTime"]
+    },
+    "SchoolSettings": {
+      "title": "SchoolSettings",
+      "description": "School organization details entered by Principal during setup.",
+      "type": "object",
+      "properties": {
+        "institutionName": { "type": "string", "maxLength": 150 },
+        "principalName": { "type": "string", "maxLength": 100 },
+        "principalEmail": { "type": "string", "maxLength": 150 },
+        "schoolAddress": { "type": "string", "maxLength": 300 },
+        "contactPhone": { "type": "string", "maxLength": 50 },
+        "schoolLogo": { "type": "string", "maxLength": 500 },
+        "isConfigured": { "type": "boolean" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["institutionName", "principalName", "principalEmail"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles determining principal vs teacher access."
+    },
+    "/notices/{noticeId}": {
+      "schema": { "$ref": "#/entities/Notice" },
+      "description": "Official notices on the notice board."
+    },
+    "/announcements/{announcementId}": {
+      "schema": { "$ref": "#/entities/Announcement" },
+      "description": "Broadcast announcements with email capability."
+    },
+    "/schedules/{scheduleId}": {
+      "schema": { "$ref": "#/entities/Schedule" },
+      "description": "Academic schedules and calendar."
+    },
+    "/meetings/{meetingId}": {
+      "schema": { "$ref": "#/entities/Meeting" },
+      "description": "Staff and committee meetings."
+    },
+    "/competitions/{competitionId}": {
+      "schema": { "$ref": "#/entities/Competition" },
+      "description": "Student and inter-house competitions."
+    },
+    "/timetable/{timetableId}": {
+      "schema": { "$ref": "#/entities/TimetableEntry" },
+      "description": "Weekly timetable periods."
+    },
+    "/circulars/{circularId}": {
+      "schema": { "$ref": "#/entities/Circular" },
+      "description": "Official school circulars."
+    },
+    "/events/{eventId}": {
+      "schema": { "$ref": "#/entities/SchoolEvent" },
+      "description": "School events and calendar milestones."
+    },
+    "/teachers/{teacherId}": {
+      "schema": { "$ref": "#/entities/Teacher" },
+      "description": "Faculty directory and email recipients."
+    },
+    "/schoolSettings/{settingsId}": {
+      "schema": { "$ref": "#/entities/SchoolSettings" },
+      "description": "Core school profile and principal identity."
+    }
+  }
+}

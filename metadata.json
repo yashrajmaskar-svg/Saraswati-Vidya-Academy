@@ -1,0 +1,6 @@
+{
+  "name": "SARASWATI VIDYA ACADEMY - School Communication Hub",
+  "description": "Official school communication hub for Saraswati Vidya Academy. Real-time announcements, circulars, events, timetable, and teacher email management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
